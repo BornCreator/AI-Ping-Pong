@@ -8,3 +8,15 @@ body
     width:100%;
     font-size:50px;
 }
+button
+{
+    opacity:20%;
+}
+#footer_which_is_at_the_bottom_of_the_page{
+    position:fixed;
+    bottom:0px;
+    width:100%;
+    background-color:white;
+    color:black;
+    line-height:3;
+}
