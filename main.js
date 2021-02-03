@@ -18,15 +18,34 @@ var ball = {
     y:480/2,
     r:20,
     dx:0.5,
-    dy:0
+    dy:0.5
 }
-
+var status='';
 function setup(){
   var canvas =  createCanvas(700,600);
+  canvas.parent('canvas');
+  video=createCapture(VIDEO);
+  video.size(800,400);
+  video.parent('video');
+  poseNet=ml5.poseNet(video,modelLoaded);
 }
 
-
+function modelLoaded(){
+  console.log('Model has Been Loaded');
+  status=true;
+}
+function gotResult(error,results){
+  if(error){
+    console.log(error);
+  }else{
+    console.log(results);
+  }
+}
 function draw(){
+  if(status==true){
+    poseNet.on('pose',gotResult);
+  }
+
 
  background(0); 
 
@@ -74,7 +93,7 @@ function reset(){
    ball.x = width/2+100,
    ball.y = height/2+100;
    ball.dx=0.3;
-   ball.dy =3;
+   ball.dy =0.3;
    
 }
 

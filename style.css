@@ -20,3 +20,7 @@ button
     color:black;
     line-height:3;
 }
+canvas{
+    border:5px black ridge;
+    box-shadow:10px 10px 10px black;
+}
