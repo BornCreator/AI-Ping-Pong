@@ -3,7 +3,7 @@
 
 var paddle2 =10,paddle1=10;
 
-var paddle1X = 10,paddle1Height = 110;
+var paddle1X = 10,paddle1Height = 210;
 var paddle2Y = 685,paddle2Height = 70;
 
 var score1 = 0, score2 =0;
@@ -21,6 +21,9 @@ var ball = {
     dy:0.5
 }
 var status='';
+var rightWristX='';
+var rightWristY='';
+var rightWristConfidence='';
 function setup(){
   var canvas =  createCanvas(700,600);
   canvas.parent('canvas');
@@ -34,16 +37,25 @@ function modelLoaded(){
   console.log('Model has Been Loaded');
   status=true;
 }
-function gotResult(error,results){
-  if(error){
-    console.log(error);
-  }else{
+function gotPoses(results){
+  if(results.length>0){
     console.log(results);
+    rightWristX=results[0].pose.rightWrist.x;
+    rightWristY=results[0].pose.rightWrist.y;
+    rightWristConfidence=results[0].pose.rightWrist.confidence;
+    console.log(rightWristConfidence);
+    console.log(rightWristX);
+    console.log(rightWristY);
   }
 }
 function draw(){
-  if(status==true){
-    poseNet.on('pose',gotResult);
+  if(status!=''){
+    poseNet.on('pose',gotPoses);
+    fill('red');
+    stroke('black');
+    if(rightWristConfidence>0.1){
+      circle(rightWristX,rightWristY,5);
+    }
   }
 
 
