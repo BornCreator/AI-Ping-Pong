@@ -35,7 +35,6 @@ function setup(){
 
 function modelLoaded(){
   console.log('Model has Been Loaded');
-  status=true;
 }
 function gotPoses(results){
   if(results.length>0){
@@ -57,6 +56,12 @@ function draw(){
       circle(rightWristX,rightWristY,5);
     }
   }
+  function startGame(){
+    status=true;
+    document.getElementById('status').innerHTML='Game Is Loaded';
+  }
+
+
 
 
  background(0); 
