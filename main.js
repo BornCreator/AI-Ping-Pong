@@ -4,7 +4,7 @@
 var paddle2 =10,paddle1=10;
 
 var paddle1X = 10,paddle1Height = 210;
-var paddle2Y = 685,paddle2Height = 70;
+var paddle2Y = 685,paddle2Height = 10;
 
 var score1 = 0, score2 =0;
 var paddle1Y;
@@ -17,13 +17,20 @@ var ball = {
     x:350/2,
     y:480/2,
     r:20,
-    dx:0.5,
-    dy:0.5
+    dx:5,
+    dy:3
 }
 var status='';
 var rightWristX='';
 var rightWristY='';
 var rightWristConfidence='';
+var ball_touch_paddle='';
+var miss='';
+function preload(){
+  ball_touch_paddle=loadSound('ball_touch_paddel.wav');
+  miss=loadSound('missed.wav');
+}
+
 function setup(){
   var canvas =  createCanvas(700,600);
   canvas.parent('canvas');
@@ -39,14 +46,20 @@ function modelLoaded(){
 function gotPoses(results){
   if(results.length>0){
     console.log(results);
-    rightWristX=results[0].pose.rightWrist.x;
-    rightWristY=results[0].pose.rightWrist.y;
-    rightWristConfidence=results[0].pose.rightWrist.confidence;
+    rightWristX=results[0].pose.nose.x;
+    rightWristY=results[0].pose.nose.y;
+    rightWristConfidence=results[0].pose.nose.confidence;
     console.log(rightWristConfidence);
     console.log(rightWristX);
     console.log(rightWristY);
   }
 }
+
+function startGame(){
+  status=true;
+  document.getElementById('status').innerHTML='Game Is Loaded';
+}
+
 function draw(){
   if(status!=''){
     poseNet.on('pose',gotPoses);
@@ -56,12 +69,12 @@ function draw(){
       circle(rightWristX,rightWristY,5);
     }
   }
-  function startGame(){
-    status=true;
-    document.getElementById('status').innerHTML='Game Is Loaded';
+
+  function restart(){
+    pcscore=0;
+    playerscore=-5;
+    loop();
   }
-
-
 
 
  background(0); 
@@ -81,7 +94,7 @@ function draw(){
    fill(250,0,0);
     stroke(0,0,250);
     strokeWeight(0.5);
-   paddle1Y = mouseY; 
+   paddle1Y = rightWristY;
    rect(paddle1X,paddle1Y,paddle1,paddle1Height,100);
    
    
@@ -109,8 +122,8 @@ function draw(){
 function reset(){
    ball.x = width/2+100,
    ball.y = height/2+100;
-   ball.dx=0.3;
-   ball.dy =0.3;
+   ball.dx=5;
+   ball.dy =3;
    
 }
 
@@ -152,12 +165,14 @@ function move(){
    }
   if (ball.x-2.5*ball.r/2< 0){
   if (ball.y >= paddle1Y&& ball.y <= paddle1Y + paddle1Height) {
-    ball.dx = -ball.dx+0.5; 
+    ball.dx = -ball.dx+0.5;
+    ball_touch_paddle.play();
   }
   else{
     pcscore++;
     reset();
     navigator.vibrate(100);
+    miss.play();
   }
 }
 if(pcscore ==4){
